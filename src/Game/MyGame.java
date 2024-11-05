@@ -117,7 +117,6 @@ public final class MyGame extends JPanel implements KeyListener{
         g2.setColor(new Color(169,169,169));
         g2.fillRect(0, 0, getWidth(), getHeight());
         g2.drawImage(darkCloudImage2, 0, 30, 350, 100, this);
-        
         if (this.timeLeft<=30 || score>=30){
             g2.setColor(Color.GRAY);
             g2.fillRect(0, 0, getWidth(), getHeight());
@@ -167,8 +166,7 @@ public final class MyGame extends JPanel implements KeyListener{
                     person.blood -= 5;
                     ice.y = ice.yStart;
                     ice.x = (int)(10+Math.floor(Math.random()*300));
-                }
-                
+                } 
             }
         }
         for(IncreaseBlood in_blood:increaseBloodSet){
@@ -192,9 +190,7 @@ public final class MyGame extends JPanel implements KeyListener{
                     this.slowCheck = true;
                 }
                 de_speed.y = de_speed.yStart;
-                de_speed.x = (int)(10+Math.floor(Math.random()*300));
-                
-                
+                de_speed.x = (int)(10+Math.floor(Math.random()*300));  
             }
         }
         for (SpeedUp in_speed:speedUpSet){
@@ -205,8 +201,7 @@ public final class MyGame extends JPanel implements KeyListener{
                     this.slowCheck = false;
                 }
                 in_speed.y = in_speed.yStart;
-                in_speed.x = (int)(10+Math.floor(Math.random()*300));
-                
+                in_speed.x = (int)(10+Math.floor(Math.random()*300)); 
             }
         }   
     }
