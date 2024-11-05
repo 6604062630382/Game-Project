@@ -1,0 +1,14 @@
+package Object;
+import Event.Event;
+import javax.swing.JPanel;
+
+public class IncreaseBlood extends Event {
+    public IncreaseBlood(int x,int y,int w,int h,JPanel game){
+        this.x = x;
+        this.yStart = y;
+        this.y = y;
+        this.width = w;
+        this.height = h;
+        this.move(game);
+    }
+}
