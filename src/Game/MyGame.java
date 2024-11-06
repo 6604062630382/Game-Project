@@ -7,6 +7,7 @@ import Object.SlowDown;
 import Object.SpeedUp;
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -21,39 +22,44 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
-
 public final class MyGame extends JPanel implements KeyListener{
-    private final ImageIcon character = new ImageIcon("src/Pictures/Character.png");
+    private final ImageIcon character = new ImageIcon(getClass().getResource("/Pictures/Character.png"));
     private final Image characterImage = character.getImage();
-    private final ImageIcon character2 = new ImageIcon("src/Pictures/Character2.png");
+    private final ImageIcon character2 = new ImageIcon(getClass().getResource("/Pictures/Character2.png"));
     private final Image characterImage2 = character2.getImage();
-    private final ImageIcon lighting1 = new ImageIcon("src/Pictures/Lighting.png");
+    private final ImageIcon lighting1 = new ImageIcon(getClass().getResource("/Pictures/Lighting.png"));
     private final Image lighting1Image = lighting1.getImage();
-    private final ImageIcon darkCloud = new ImageIcon("src/Pictures/DarkCloud.png");
+    private final ImageIcon darkCloud = new ImageIcon(getClass().getResource("/Pictures/DarkCloud.png"));
     private final Image darkCloudImage = darkCloud.getImage();
-    private final ImageIcon darkCloud2 = new ImageIcon("src/Pictures/DarkCloud2.png");
+    private final ImageIcon darkCloud2 = new ImageIcon(getClass().getResource("/Pictures/DarkCloud2.png"));
     private final Image darkCloudImage2 = darkCloud2.getImage();
-    private final ImageIcon rainIcon = new ImageIcon("src/Pictures/Rain.png");
+    private final ImageIcon rainIcon = new ImageIcon(getClass().getResource("/Pictures/Rain.png"));
     private final Image rainImage = rainIcon.getImage();
-    private final ImageIcon blood = new ImageIcon("src/Pictures/Blood.png");
+    private final ImageIcon blood = new ImageIcon(getClass().getResource("/Pictures/Blood.png"));
     private final Image bloodImage = blood.getImage();
-    private final ImageIcon iceIcon = new ImageIcon("src/Pictures/Ice.png");
+    private final ImageIcon iceIcon = new ImageIcon(getClass().getResource("/Pictures/Ice.png"));
     private final Image iceImage = iceIcon.getImage();
-    private final ImageIcon umbrella = new ImageIcon("src/Pictures/Umbrella.png");
+    private final ImageIcon umbrella = new ImageIcon(getClass().getResource("/Pictures/Umbrella.png"));
     private final Image umbrellaImage = umbrella.getImage();
-    private final ImageIcon heart = new ImageIcon("src/Pictures/Heart.png");
+    private final ImageIcon heart = new ImageIcon(getClass().getResource("/Pictures/Heart.png"));
     private final Image heartImage = heart.getImage();
+    public final ImageIcon pause = new ImageIcon(getClass().getResource("/Pictures/Pause.png"));
+    public final Image pauseImage = pause.getImage();
+    public final Image pauseImage2 = pause.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+    public final ImageIcon pause2 = new ImageIcon(pauseImage2);
+    public final static JButton pauseButton = new JButton();
+    public int pauseCount = 0;
     public static int gameSpeed = 20;
     public static int score = 0;
-    private int timeLeft = 60;
+    public static int timeLeft = 60;
     private boolean slowCheck = false;
     private boolean speedCheck = false;
     public static Person person = new Person(7,440,80,130,15);
-    Rain[] rainSet;
-    Ice[] iceSet;
-    IncreaseBlood[] increaseBloodSet;
-    SlowDown[] slowDownSet;
-    public SpeedUp[] speedUpSet;
+    private Rain[] rainSet;
+    private Ice[] iceSet;
+    private IncreaseBlood[] increaseBloodSet;
+    private SlowDown[] slowDownSet;
+    private SpeedUp[] speedUpSet;
     private Timer timer;
     private Thread gameThread;
     public void resetGame() {
@@ -94,9 +100,13 @@ public final class MyGame extends JPanel implements KeyListener{
         gameThread.start();
         
         timer = new Timer(1000, (ActionEvent e) -> {
-            if (timeLeft > 0) {
+            if (timeLeft > 0 && person.blood > 0) {
                 timeLeft--;
             }
+            else{
+                timer.stop();
+            }
+            
             this.repaint();
         });
         timer.start();
@@ -104,6 +114,22 @@ public final class MyGame extends JPanel implements KeyListener{
     
     public MyGame(){
         resetGame();
+        pauseButton.addActionListener(e->{
+            if (pauseCount % 2 != 0){
+                timer.start();
+            }else{
+                timer.stop(); 
+            }
+            pauseCount++;
+            this.repaint();
+        });
+        pauseButton.setIcon(pause2);
+        pauseButton.setFocusable(false);
+        pauseButton.setBounds(315, 8, 40, 40);
+        pauseButton.setBorder(BorderFactory.createEmptyBorder());   
+        pauseButton.setContentAreaFilled(false);
+        pauseButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        this.add(pauseButton);
         this.setBounds(0,0,500,600);
         this.addKeyListener(this);
         this.setFocusable(true);
@@ -117,7 +143,7 @@ public final class MyGame extends JPanel implements KeyListener{
         g2.setColor(new Color(169,169,169));
         g2.fillRect(0, 0, getWidth(), getHeight());
         g2.drawImage(darkCloudImage2, 0, 30, 350, 100, this);
-        if (this.timeLeft<=30 || score>=30){
+        if (timeLeft<=30 || score>=30){
             g2.setColor(Color.GRAY);
             g2.fillRect(0, 0, getWidth(), getHeight());
             g2.drawImage(darkCloudImage, 0, 30, 350, 100, this);
@@ -125,11 +151,13 @@ public final class MyGame extends JPanel implements KeyListener{
         g2.drawImage(characterImage, person.x, person.y, person.width, person.height, this);
         g2.setFont(new Font("Comic Sans MS",Font.BOLD,25));
         g2.setColor(Color.WHITE);
-        g2.drawString("Time: "+this.timeLeft, 233, 75);
+        g2.drawString("Time: "+timeLeft, 233, 120);
 //        g2.drawString("HP: "+person.blood+" %", 20, 80);
-        g2.drawString("Score: "+score, 220, 40);
+        g2.drawString("Score: "+score, 220, 75);
 //        g2.drawString("Speed: "+MyGame.gameSpeed, 200, 60);
-        
+//        g2.setColor(Color.RED);
+//        g2.drawImage(pauseImage, 315, 8, 40, 40, this);
+//        g2.drawString("Pause (P)",240, 40);
         g2.drawImage(heartImage,10,20, 20,20,this);
         g2.setStroke(new BasicStroke(18.0f));
         g2.setColor(new Color(241, 98, 69));
@@ -166,7 +194,7 @@ public final class MyGame extends JPanel implements KeyListener{
                     person.blood -= 5;
                     ice.y = ice.yStart;
                     ice.x = (int)(10+Math.floor(Math.random()*300));
-                } 
+                }  
             }
         }
         for(IncreaseBlood in_blood:increaseBloodSet){
@@ -190,7 +218,7 @@ public final class MyGame extends JPanel implements KeyListener{
                     this.slowCheck = true;
                 }
                 de_speed.y = de_speed.yStart;
-                de_speed.x = (int)(10+Math.floor(Math.random()*300));  
+                de_speed.x = (int)(10+Math.floor(Math.random()*300));   
             }
         }
         for (SpeedUp in_speed:speedUpSet){
@@ -201,9 +229,12 @@ public final class MyGame extends JPanel implements KeyListener{
                     this.slowCheck = false;
                 }
                 in_speed.y = in_speed.yStart;
-                in_speed.x = (int)(10+Math.floor(Math.random()*300)); 
+                in_speed.x = (int)(10+Math.floor(Math.random()*300));
             }
         }   
+        if (pauseCount % 2 != 0){
+            g2.drawImage(pauseImage, 80, 200, 200, 200, this);
+        }
     }
     private Rain[] makeRainSet(int rainNumber){
         Rain[] rainSet = new Rain[rainNumber];
@@ -250,10 +281,24 @@ public final class MyGame extends JPanel implements KeyListener{
     @Override
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode()==65 || e.getKeyCode()==37){
-            person.left();
+            if (pauseCount % 2 == 0){
+                person.left();
+            }
         }
         else if (e.getKeyCode()==68 || e.getKeyCode()==39){
-            person.right();
+            if (pauseCount % 2 == 0){
+               person.right(); 
+            }
+        }
+        else if (e.getKeyCode()==80){
+            if (e.getKeyCode()==80){
+                if (pauseCount % 2 != 0){
+                    timer.start();
+                }else{
+                    timer.stop(); 
+                }
+                pauseCount++;
+            }
         }
         this.repaint();
     }
@@ -266,20 +311,20 @@ class StartMenu extends JPanel{
     private final JLabel gameName = new JLabel("Collect Rain");
     //Rain
     private final JLabel rainPicture = new JLabel();
-    private final ImageIcon rain = new ImageIcon("src/Pictures/Rain.png");
+    private final ImageIcon rain = new ImageIcon(getClass().getResource("/Pictures/Rain.png"));
     //Dark Cloud
     private final JLabel darkCloudPicture = new JLabel();
-    private final ImageIcon darkCloud = new ImageIcon("src/Pictures/DarkCloud.png");
+    private final ImageIcon darkCloud = new ImageIcon(getClass().getResource("/Pictures/DarkCloud.png"));
     Image resizedImage = darkCloud.getImage().getScaledInstance(350, 100, Image.SCALE_SMOOTH);
     private final ImageIcon newDarkCloud = new ImageIcon(resizedImage);
     //Lighting
     private final JLabel lighting2Picture = new JLabel();
-    private final ImageIcon lighting2 = new ImageIcon("src/Pictures/Lighting2.png");
+    private final ImageIcon lighting2 = new ImageIcon(getClass().getResource("/Pictures/Lighting2.png"));
     Image resizedImage2 = lighting2.getImage().getScaledInstance(300, 320, Image.SCALE_SMOOTH);
     private final ImageIcon newLighting = new ImageIcon(resizedImage2);
     //Character
     private final JLabel characterPicture = new JLabel();
-    private final ImageIcon character = new ImageIcon("src/Pictures/Character.png");
+    private final ImageIcon character = new ImageIcon(getClass().getResource("/Pictures/Character.png"));
     //Start Button
     private final JButton startButton = new JButton("Start");
     public StartMenu(){
@@ -302,6 +347,7 @@ class StartMenu extends JPanel{
         startButton.setBounds(180, 400, 150, 70);
         startButton.setFont(new Font("Comic Sans MS",Font.BOLD,35));
         startButton.setFocusable(false);
+        startButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         startButton.setBackground(new Color(211,211,211));
         startButton.setBorder(BorderFactory.createLineBorder(Color.BLACK, 5, true));
         startButton.addActionListener(e->{
