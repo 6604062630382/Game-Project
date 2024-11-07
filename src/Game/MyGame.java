@@ -116,11 +116,9 @@ public final class MyGame extends JPanel implements KeyListener{
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 }
-                this.repaint();
             }
             remove(this);
             this.removeAll();
-            this.repaint();
             this.add(new EndMenu());
         });
         gameThread.start();
@@ -132,8 +130,6 @@ public final class MyGame extends JPanel implements KeyListener{
             else{
                 timer.stop();
             }
-            
-            this.repaint();
         });
         timer.start();
     }
@@ -245,7 +241,6 @@ public final class MyGame extends JPanel implements KeyListener{
         }
         return rainSet;
     }
-    
     private Ice[] makeIceSet(int iceNumber) {
         iceSet = new Ice[iceNumber];
         for (int i=0;i<iceNumber;i++){
@@ -254,7 +249,6 @@ public final class MyGame extends JPanel implements KeyListener{
         }
         return iceSet;
     }
-    
     private IncreaseBlood[] makeIncreaseBloodSet(int increaseBloodNumber) {
         increaseBloodSet = new IncreaseBlood[increaseBloodNumber];
         for (int i=0;i<increaseBloodNumber;i++){
@@ -263,7 +257,6 @@ public final class MyGame extends JPanel implements KeyListener{
         }
         return increaseBloodSet;
     }
-    
     private SlowDown[] makeSlowDownSet(int slowDownNumber) {
         slowDownSet = new SlowDown[slowDownNumber];
         for (int i=0;i<slowDownNumber;i++){
@@ -272,7 +265,6 @@ public final class MyGame extends JPanel implements KeyListener{
         }
         return slowDownSet;
     }
-    
     private SpeedUp[] makeSpeedUpSet(int speedUpNumber) {
         speedUpSet = new SpeedUp[speedUpNumber];
         for (int i=0;i<speedUpNumber;i++){
@@ -281,7 +273,6 @@ public final class MyGame extends JPanel implements KeyListener{
         }
         return speedUpSet;
     }
-    
     @Override
     public void keyTyped(KeyEvent e) {}
     @Override
@@ -303,8 +294,8 @@ public final class MyGame extends JPanel implements KeyListener{
                 timer.stop(); 
             }
             pauseCount++;
+            this.repaint();
         }
-        this.repaint();
     }
     @Override
     public void keyReleased(KeyEvent e) {}
