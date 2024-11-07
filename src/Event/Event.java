@@ -10,7 +10,7 @@ import java.awt.event.KeyListener;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
-public class Event {
+public class Event{
     public int x,y,width,height;
     public int yStart;
     public int count=0;
@@ -27,18 +27,14 @@ public class Event {
         if (timer1 != null) {
             timer1.stop();
         }
-        timer1 = new Timer(50,new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (person.blood <= 0 || MyGame.timeLeft <= 0){
-                    timer1.stop(); 
-                }
-                y += MyGame.gameSpeed;
-                game.repaint();
-                if (y>600){
-                    y = yStart;
-                    x = (int)(10+Math.floor(Math.random()*300));
-                }  
+        timer1 = new Timer(50, (ActionEvent e) -> {
+            if (person.blood <= 0 || MyGame.timeLeft <= 0){
+                timer1.stop();  
+            }
+            y += MyGame.gameSpeed;
+            if (y>600){
+                y = yStart;
+                x = (int)(10+Math.floor(Math.random()*300));
             }
         });
         timer1.start();

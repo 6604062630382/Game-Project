@@ -111,12 +111,14 @@ public final class MyGame extends JPanel implements KeyListener{
                     person.speed = 17;
                     speedCheck = true;
                 }
+                this.repaint();
                 try {
                     gameThread.sleep(50);
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 }
             }
+            this.repaint();
             remove(this);
             this.removeAll();
             this.add(new EndMenu());
@@ -156,14 +158,13 @@ public final class MyGame extends JPanel implements KeyListener{
 //        g2.setColor(Color.RED);
 //        g2.drawString("Pause (P)",240, 40);
         g2.drawImage(heartImage,10,20, 20,20,this);
-        g2.setStroke(new BasicStroke(18.0f));
         g2.setColor(new Color(241, 98, 69));
         if (person.blood>0){  
-            g2.drawLine(60, 30,person.blood+60,30);
+            g2.fillRect(50,20,person.blood,20);
         }
         g2.setColor(Color.white);
         g2.setStroke(new BasicStroke(6.0f));
-        g2.drawRect(50,20,120,20);
+        g2.drawRect(50,20,100,20);
         if (this.slowCheck){
                 g2.drawImage(characterImage2, person.x, person.y, person.width, person.height, this);
         }

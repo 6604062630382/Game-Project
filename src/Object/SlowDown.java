@@ -9,6 +9,6 @@ public class SlowDown extends Event {
         this.y = y;
         this.width = w;
         this.height = h;
-        this.move(game);
+        super.move(game);
     }
 }
