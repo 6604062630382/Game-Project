@@ -23,7 +23,7 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 
 public final class MyGame extends JPanel implements KeyListener{
-    private final ImageIcon character = new ImageIcon(getClass().getResource("/Pictures/Character.png"));
+    public final ImageIcon character = new ImageIcon(getClass().getResource("/Pictures/Character.png"));
     private final Image characterImage = character.getImage();
     private final ImageIcon character2 = new ImageIcon(getClass().getResource("/Pictures/Character2.png"));
     private final Image characterImage2 = character2.getImage();
@@ -62,6 +62,32 @@ public final class MyGame extends JPanel implements KeyListener{
     private SpeedUp[] speedUpSet;
     private Timer timer;
     private Thread gameThread;
+    
+    public MyGame(){
+        resetGame();
+        pauseButton.addActionListener(e->{
+            if (pauseCount % 2 != 0){
+                timer.start();
+            }else{
+                timer.stop(); 
+            }
+            pauseCount++;
+            this.repaint();
+        });
+        pauseButton.setIcon(pause2);
+        pauseButton.setFocusable(false);
+        pauseButton.setBounds(315, 8, 40, 40);
+        pauseButton.setBorder(BorderFactory.createEmptyBorder());   
+        pauseButton.setContentAreaFilled(false);
+        pauseButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        this.add(pauseButton);
+        this.setBounds(0,0,500,600);
+        this.addKeyListener(this);
+        this.setFocusable(true);
+        this.setLayout(null);
+        this.setVisible(true);
+    }
+    
     public void resetGame() {
         if (timer != null) {
             timer.stop();
@@ -112,30 +138,6 @@ public final class MyGame extends JPanel implements KeyListener{
         timer.start();
     }
     
-    public MyGame(){
-        resetGame();
-        pauseButton.addActionListener(e->{
-            if (pauseCount % 2 != 0){
-                timer.start();
-            }else{
-                timer.stop(); 
-            }
-            pauseCount++;
-            this.repaint();
-        });
-        pauseButton.setIcon(pause2);
-        pauseButton.setFocusable(false);
-        pauseButton.setBounds(315, 8, 40, 40);
-        pauseButton.setBorder(BorderFactory.createEmptyBorder());   
-        pauseButton.setContentAreaFilled(false);
-        pauseButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        this.add(pauseButton);
-        this.setBounds(0,0,500,600);
-        this.addKeyListener(this);
-        this.setFocusable(true);
-        this.setLayout(null);
-        this.setVisible(true);
-    }
     @Override
     public void paintComponent(Graphics g){
         super.paintComponent(g);
@@ -152,11 +154,10 @@ public final class MyGame extends JPanel implements KeyListener{
         g2.setFont(new Font("Comic Sans MS",Font.BOLD,25));
         g2.setColor(Color.WHITE);
         g2.drawString("Time: "+timeLeft, 233, 120);
-//        g2.drawString("HP: "+person.blood+" %", 20, 80);
         g2.drawString("Score: "+score, 220, 75);
+//        g2.drawString("HP: "+person.blood+" %", 20, 80);
 //        g2.drawString("Speed: "+MyGame.gameSpeed, 200, 60);
 //        g2.setColor(Color.RED);
-//        g2.drawImage(pauseImage, 315, 8, 40, 40, this);
 //        g2.drawString("Pause (P)",240, 40);
         g2.drawImage(heartImage,10,20, 20,20,this);
         g2.setStroke(new BasicStroke(18.0f));
@@ -167,7 +168,6 @@ public final class MyGame extends JPanel implements KeyListener{
         g2.setColor(Color.white);
         g2.setStroke(new BasicStroke(6.0f));
         g2.drawRect(50,20,120,20);
-        
         if (this.slowCheck){
                 g2.drawImage(characterImage2, person.x, person.y, person.width, person.height, this);
         }
@@ -236,69 +236,73 @@ public final class MyGame extends JPanel implements KeyListener{
             g2.drawImage(pauseImage, 80, 200, 200, 200, this);
         }
     }
+    
     private Rain[] makeRainSet(int rainNumber){
-        Rain[] rainSet = new Rain[rainNumber];
+        rainSet = new Rain[rainNumber];
         for (int i=0;i<rainNumber;i++){
             double rainLocation = 10+Math.floor(Math.random()*300);
             rainSet[i] = new Rain((int)rainLocation,60,30,50,this);
         }
         return rainSet;
     }
+    
     private Ice[] makeIceSet(int iceNumber) {
-        Ice[] iceSet = new Ice[iceNumber];
+        iceSet = new Ice[iceNumber];
         for (int i=0;i<iceNumber;i++){
             double iceLocation = 10+Math.floor(Math.random()*300);
             iceSet[i] = new Ice((int)iceLocation,60,50,50,this);
         }
         return iceSet;
     }
+    
     private IncreaseBlood[] makeIncreaseBloodSet(int increaseBloodNumber) {
-        IncreaseBlood[] increaseBloodSet = new IncreaseBlood[increaseBloodNumber];
+        increaseBloodSet = new IncreaseBlood[increaseBloodNumber];
         for (int i=0;i<increaseBloodNumber;i++){
             double increaseBloodLocation = 10+Math.floor(Math.random()*300);
             increaseBloodSet[i] = new IncreaseBlood((int)increaseBloodLocation,60,40,50,this);
         }
         return increaseBloodSet;
     }
+    
     private SlowDown[] makeSlowDownSet(int slowDownNumber) {
-        SlowDown[] slowDownSet = new SlowDown[slowDownNumber];
+        slowDownSet = new SlowDown[slowDownNumber];
         for (int i=0;i<slowDownNumber;i++){
             double slowDownLocation = 10+Math.floor(Math.random()*300);
             slowDownSet[i] = new SlowDown((int)slowDownLocation,60,30,50,this);
         }
         return slowDownSet;
     }
+    
     private SpeedUp[] makeSpeedUpSet(int speedUpNumber) {
-        SpeedUp[] speedUpSet = new SpeedUp[speedUpNumber];
+        speedUpSet = new SpeedUp[speedUpNumber];
         for (int i=0;i<speedUpNumber;i++){
             double speedUpLocation = 10+Math.floor(Math.random()*300);
             speedUpSet[i] = new SpeedUp((int)speedUpLocation,60,40,60,this);
         }
         return speedUpSet;
     }
+    
     @Override
     public void keyTyped(KeyEvent e) {}
     @Override
     public void keyPressed(KeyEvent e) {
-        if (e.getKeyCode()==65 || e.getKeyCode()==37){
+        if (e.getKeyCode()==KeyEvent.VK_A || e.getKeyCode()==KeyEvent.VK_LEFT){
             if (pauseCount % 2 == 0){
                 person.left();
             }
         }
-        else if (e.getKeyCode()==68 || e.getKeyCode()==39){
+        else if (e.getKeyCode()==KeyEvent.VK_D || e.getKeyCode()==KeyEvent.VK_RIGHT){
             if (pauseCount % 2 == 0){
                person.right(); 
             }
         }
-        else if (e.getKeyCode()==80){
-            if (e.getKeyCode()==80){
-                if (pauseCount % 2 != 0){
-                    timer.start();
-                }else{
-                    timer.stop(); 
-                }
-                pauseCount++;
+        else if (e.getKeyCode()==KeyEvent.VK_P){
+            if (pauseCount % 2 != 0){
+                timer.start();
+            }else{
+                timer.stop(); 
             }
+            pauseCount++;
         }
         this.repaint();
     }
@@ -353,11 +357,8 @@ class StartMenu extends JPanel{
         startButton.addActionListener(e->{
             remove(this);
             this.removeAll();
-            this.repaint();
             this.revalidate();
-            this.setFocusable(true);
             MyGame game = new MyGame();
-            game.resetGame();
             this.add(game);
             game.requestFocusInWindow();
         });
@@ -387,12 +388,10 @@ class EndMenu extends JPanel{
          restartButton.setBackground(new Color(211,211,211));
          restartButton.setBorder(BorderFactory.createLineBorder(Color.BLACK, 5, true));
          restartButton.addActionListener(e->{
-            this.removeAll();
             remove(this);
-            MyGame game = new MyGame();
-            game.resetGame();
-            this.repaint();
+            this.removeAll();
             this.revalidate();
+            MyGame game = new MyGame();
             this.add(game);
             game.requestFocusInWindow();
          });
