@@ -10,10 +10,11 @@ import java.awt.event.KeyListener;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
-public class Event{
+public class Event {
     public int x,y,width,height;
     public int yStart;
     public int count=0;
+
     public static boolean checkHit(Person person,Event obj){
         if (((person.x+person.width>obj.x) && (person.x < obj.x))||((person.x+person.width>obj.x+obj.width)&&(person.x<obj.x+obj.width))){
             if (person.y+person.height>obj.y+obj.height && person.y<obj.y+obj.height){
@@ -22,14 +23,17 @@ public class Event{
         }
         return false;
     }
-    public Timer timer1;
+    
+    private Timer timer1;
     public void move(JPanel game){
         if (timer1 != null) {
             timer1.stop();
+            timer1 = null;
         }
         timer1 = new Timer(50, (ActionEvent e) -> {
             if (person.blood <= 0 || MyGame.timeLeft <= 0){
                 timer1.stop();  
+                timer1 = null;
             }
             y += MyGame.gameSpeed;
             if (y>600){
@@ -40,28 +44,34 @@ public class Event{
         timer1.start();
         MyGame.pauseButton.addActionListener(e->{
             if (count % 2 != 0){
-                timer1.start();
+                if (timer1 != null) {
+                    timer1.start();
+                }
             }else{
-                timer1.stop(); 
+                if (timer1 != null) {
+                    timer1.stop();
+                }
             }
             count++;
         });
         game.addKeyListener(new KeyAdapter(){
             @Override
             public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode()==80){
+                if (e.getKeyCode()==KeyEvent.VK_P){
                     if (count % 2 != 0){
-                        timer1.start();
+                        if (timer1 != null) {
+                            timer1.start();
+                        }
                     }else{
                         timer1.stop(); 
                     }
                     count++;
                 }
-        }});
+            }
+        });
 //        game.addKeyListener(this);
 //        game.requestFocusInWindow();
     }
-
 //    @Override
 //    public void keyTyped(KeyEvent e) {}
 //    @Override
@@ -75,7 +85,6 @@ public class Event{
 //            count++;
 //        }
 //    }
-//
 //    @Override
 //    public void keyReleased(KeyEvent e) {}
 }
